@@ -1,0 +1,28 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-color: #f4f4f4;
+}
+
+.site-header {
+  background-color: #003366;
+  color: white;
+  padding: 20px;
+}
+
+main {
+  padding: 20px;
+}
+
+.department {
+  background: white;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #ddd;
+}
