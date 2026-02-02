@@ -66,3 +66,13 @@ footer {
 .submit-btn:hover {
   background-color: #002244;
 }
+
+.nav-link {
+  transition: background-color 0.3s ease, padding 0.3s ease;
+}
+
+.nav-link:hover {
+  background-color: #af3500;
+  padding: 5px 10px;
+  border-radius: 4px;
+}

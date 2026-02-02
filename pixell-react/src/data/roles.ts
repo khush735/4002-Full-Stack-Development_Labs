@@ -2,8 +2,8 @@ import type { Role } from "../types/Roles";
 
 export const roles: Role[] = [
   {
-    firstName: "Sarah",
-    lastName: "Johnson",
+    firstName: "Jagdishkumar",
+    lastName: "Patel",
     role: "Chief Executive Officer"
   },
   {
