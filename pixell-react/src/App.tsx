@@ -1,15 +1,21 @@
 import { useState } from "react";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Department from "./components/Department";
-import AddEmployeeForm from "./components/AddEmployeeForm";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Layout from "./components/Layout";
+import EmployeesPage from "./components/EmployeesPage";
+import Organization from "./components/Organization";
+
 import { departments as initialDepartments } from "./data/departments";
 import type { Department as DepartmentType } from "./types/Employee";
 
 const App = () => {
   const [departments, setDepartments] = useState<DepartmentType[]>(initialDepartments);
 
-  const addEmployee = (firstName: string, lastName: string, departmentName: string) => {
+  const addEmployee = (
+    firstName: string,
+    lastName: string,
+    departmentName: string
+  ) => {
     setDepartments(prev =>
       prev.map(dept =>
         dept.name === departmentName
@@ -23,22 +29,35 @@ const App = () => {
   };
 
   return (
-    <>
-      <Header />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
 
-      <main>
-        {departments.map((dept, index) => (
-          <Department key={index} department={dept} />
-        ))}
+          <Route
+            index
+            element={
+              <EmployeesPage
+                departments={departments}
+                onAddEmployee={addEmployee}
+              />
+            }
+          />
 
-        <AddEmployeeForm
-          departments={departments}
-          onAddEmployee={addEmployee}
-        />
-      </main>
+          <Route
+            path="employees"
+            element={
+              <EmployeesPage
+                departments={departments}
+                onAddEmployee={addEmployee}
+              />
+            }
+          />
 
-      <Footer />
-    </>
+          <Route path="organization" element={<Organization />} />
+
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 };
 
