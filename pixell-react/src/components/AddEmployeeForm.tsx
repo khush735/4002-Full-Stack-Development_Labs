@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useFormInput } from "../hooks/useFormInput";
 import type { Department } from "../types/Employee";
 
 interface Props {
@@ -7,69 +7,58 @@ interface Props {
 }
 
 const AddEmployeeForm = ({ departments, onAddEmployee }: Props) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [department, setDepartment] = useState(departments[0]?.name || "");
-  const [error, setError] = useState("");
+
+  const firstName = useFormInput("");
+  const lastName = useFormInput("");
+  const department = useFormInput(departments[0]?.name || "");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
 
-    if (firstName.trim().length < 3) {
-      setError("First name must be at least 3 characters long.");
+    if (firstName.value.trim().length < 3) {
+      firstName.setError("First name must be at least 3 characters.");
       return;
     }
 
-    onAddEmployee(firstName.trim(), lastName.trim(), department);
-
-    setFirstName("");
-    setLastName("");
+    onAddEmployee(firstName.value, lastName.value, department.value);
+    
+    firstName.setValue("");
+    lastName.setValue("");
   };
 
   return (
-    <section className="department">
-      <h2>Add New Employee</h2>
+    <section>
+      <h2>Add Employee</h2>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {firstName.error && <p style={{ color: "red" }}>{firstName.error}</p>}
 
-      <form onSubmit={handleSubmit} className="add-employee-form">
-        <div className="form-group">
-          <label htmlFor="firstName">First Name:</label>
-          <input
-            id="firstName"
-            type="text"
-            value={firstName}
-            onChange={e => setFirstName(e.target.value)}
-          />
-        </div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="First Name"
+          value={firstName.value}
+          onChange={firstName.onChange}
+        />
 
-        <div className="form-group">
-          <label htmlFor="lastName">Last Name:</label>
-          <input
-            id="lastName"
-            type="text"
-            value={lastName}
-            onChange={e => setLastName(e.target.value)}
-          />
-        </div>
+        <input
+          type="text"
+          placeholder="Last Name"
+          value={lastName.value}
+          onChange={lastName.onChange}
+        />
 
-        <div className="form-group">
-          <label htmlFor="department">Department:</label>
-          <select
-            id="department"
-            value={department}
-            onChange={e => setDepartment(e.target.value)}
-          >
-            {departments.map((dept, index) => (
-              <option key={index} value={dept.name}>
-                {dept.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <select
+          value={department.value}
+          onChange={department.onChange}
+        >
+          {departments.map((dept, index) => (
+            <option key={index} value={dept.name}>
+              {dept.name}
+            </option>
+          ))}
+        </select>
 
-        <button type="submit" className="submit-btn">Add Employee</button>
+        <button type="submit">Add</button>
       </form>
     </section>
   );
