@@ -1,13 +1,14 @@
+import { useState } from "react";
 import Department from "./Department";
 import AddEmployeeForm from "./AddEmployeeForm";
+import { employeeRepo } from "../repositories/employeeRepo";
 import type { Department as DepartmentType } from "../types/Employee";
 
-interface Props {
-  departments: DepartmentType[];
-  onAddEmployee: (firstName: string, lastName: string, departmentName: string) => void;
-}
+const EmployeesPage = () => {
+  const [departments, setDepartments] = useState<DepartmentType[]>(
+    employeeRepo.getDepartments()
+  );
 
-const EmployeesPage = ({ departments, onAddEmployee }: Props) => {
   return (
     <>
       {departments.map((dept, index) => (
@@ -16,7 +17,7 @@ const EmployeesPage = ({ departments, onAddEmployee }: Props) => {
 
       <AddEmployeeForm
         departments={departments}
-        onAddEmployee={onAddEmployee}
+        setDepartments={setDepartments}
       />
     </>
   );

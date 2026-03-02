@@ -1,6 +1,14 @@
-import { roles } from "../data/roles";
+import { useState } from "react";
+import { roleRepo } from "../repositories/roleRepo";
+import AddRoleForm from "./AddRoleForm";
+import type { Role } from "../types/Roles";
 
 const Organization = () => {
+
+  const [roles, setRoles] = useState<Role[]>(
+    roleRepo.getRoles()
+  );
+
   return (
     <section className="department">
       <h2>Organization Leadership</h2>
@@ -22,6 +30,8 @@ const Organization = () => {
           <span>{person.role}</span>
         </div>
       ))}
+
+      <AddRoleForm setRoles={setRoles} />
     </section>
   );
 };
