@@ -1,13 +1,12 @@
 import { useFormInput } from "../hooks/useFormInput";
-import { employeeService } from "../services/employeeService";
 import type { Department } from "../types/Employee";
 
 interface Props {
   departments: Department[];
-  setDepartments: (departments: Department[]) => void;
+  onAddEmployee: (firstName: string, lastName: string, departmentName: string) => void;
 }
 
-const AddEmployeeForm = ({ departments, setDepartments }: Props) => {
+const AddEmployeeForm = ({ departments, onAddEmployee }: Props) => {
   const firstName = useFormInput("");
   const lastName = useFormInput("");
   const department = useFormInput(departments[0]?.name || "");
@@ -15,20 +14,12 @@ const AddEmployeeForm = ({ departments, setDepartments }: Props) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const result = employeeService.createEmployee(
-      firstName.value,
-      lastName.value,
-      department.value
-    );
-
-    if (!result.success) {
-      firstName.validate(() => result.message || null);
+    if (!firstName.value || !lastName.value) {
+      firstName.validate(() => "First name and last name are required");
       return;
     }
 
-    if (result.data) {
-      setDepartments(result.data);
-    }
+    onAddEmployee(firstName.value, lastName.value, department.value);
 
     firstName.setValue("");
     lastName.setValue("");
