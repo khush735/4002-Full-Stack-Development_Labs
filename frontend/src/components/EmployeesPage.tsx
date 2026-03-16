@@ -4,10 +4,22 @@ import type { Department as DepartmentType } from "../types/Employee";
 
 interface Props {
   departments: DepartmentType[];
-  onAddEmployee: (firstName: string, lastName: string, departmentName: string) => void;
+  onAddEmployee: (
+    firstName: string,
+    lastName: string,
+    departmentName: string
+  ) => void;
 }
 
 const EmployeesPage = ({ departments, onAddEmployee }: Props) => {
+  const handleAddEmployee = (
+    firstName: string,
+    lastName: string,
+    departmentName: string
+  ) => {
+    onAddEmployee(firstName, lastName, departmentName);
+  };
+
   return (
     <>
       {departments.map((dept, index) => (
@@ -16,7 +28,7 @@ const EmployeesPage = ({ departments, onAddEmployee }: Props) => {
 
       <AddEmployeeForm
         departments={departments}
-        onAddEmployee={onAddEmployee}
+        onAddEmployee={handleAddEmployee}
       />
     </>
   );
