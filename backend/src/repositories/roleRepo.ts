@@ -1,20 +1,14 @@
-import { roles } from "../data/roles";
+import prisma from '../../prisma/prisma';
 
 export const roleRepo = {
-
-  getRoles() {
-    return roles;
+  async getRoles() {
+    return await prisma.role.findMany();
   },
 
-  createRole(firstName: string, lastName: string, role: string) {
-
-    roles.push({
-      firstName,
-      lastName,
-      role
+  async createRole(firstName: string, lastName: string, role: string) {
+    await prisma.role.create({
+      data: { firstName, lastName, role }
     });
-
-    return roles;
+    return await prisma.role.findMany();
   }
-
 };

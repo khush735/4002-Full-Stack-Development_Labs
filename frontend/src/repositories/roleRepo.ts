@@ -1,12 +1,13 @@
 export const roleRepo = {
-
   async getRoles() {
     const response = await fetch("http://localhost:3000/api/roles");
+    if (!response.ok) {
+      throw new Error("Failed to fetch roles");
+    }
     return await response.json();
   },
 
   async createRole(firstName: string, lastName: string, role: string) {
-
     const response = await fetch("http://localhost:3000/api/roles", {
       method: "POST",
       headers: {
@@ -18,8 +19,9 @@ export const roleRepo = {
         role
       })
     });
-
+    if (!response.ok) {
+      throw new Error("Failed to create role");
+    }
     return await response.json();
   }
-
 };
