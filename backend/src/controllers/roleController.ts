@@ -2,23 +2,24 @@ import { Request, Response } from "express";
 import { roleService } from "../services/roleService";
 
 export const roleController = {
-
-  getRoles(req: Request, res: Response) {
-    const roles = roleService.getRoles();
-    res.json(roles);
+  async getRoles(req: Request, res: Response) {
+    try {
+      const roles = await roleService.getRoles();
+      res.json(roles);
+    } catch (error) {
+      console.error("Error in getRoles:", error);
+      res.status(500).json({ error: "Failed to fetch roles" });
+    }
   },
 
-  createRole(req: Request, res: Response) {
-
-    const { firstName, lastName, role } = req.body;
-
-    const updatedRoles = roleService.createRole(
-      firstName,
-      lastName,
-      role
-    );
-
-    res.json(updatedRoles);
+  async createRole(req: Request, res: Response) {
+    try {
+      const { firstName, lastName, role } = req.body;
+      const updatedRoles = await roleService.createRole(firstName, lastName, role);
+      res.json(updatedRoles);
+    } catch (error: any) {
+      console.error("Error in createRole:", error);
+      res.status(400).json({ message: error.message });
+    }
   }
-
 };

@@ -1,38 +1,74 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
 import EmployeesPage from "./components/EmployeesPage";
 import Organization from "./components/Organization";
 
-import { departments as initialDepartments } from "./data/departments";
+import { employeeRepo } from "./repositories/employeeRepo";
 import type { Department as DepartmentType } from "./types/Employee";
 
 const App = () => {
-  const [departments, setDepartments] = useState<DepartmentType[]>(initialDepartments);
+  const [departments, setDepartments] = useState<DepartmentType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const addEmployee = (
+  useEffect(() => {
+    loadDepartments();
+  }, []);
+
+  const loadDepartments = async () => {
+    try {
+      console.log("Loading departments...");
+      const data = await employeeRepo.getDepartments();
+      console.log("Departments loaded:", data);
+      setDepartments(data);
+      setError(null);
+    } catch (error) {
+      console.error("Failed to load departments:", error);
+      setError("Failed to load departments. Make sure backend is running on port 3000");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addEmployee = async (
     firstName: string,
     lastName: string,
     departmentName: string
   ) => {
-    setDepartments(prev =>
-      prev.map(dept =>
-        dept.name === departmentName
-          ? {
-              ...dept,
-              employees: [...dept.employees, { firstName, lastName }]
-            }
-          : dept
-      )
-    );
+    try {
+      console.log("Adding employee:", { firstName, lastName, departmentName });
+      const updatedDepartments = await employeeRepo.createEmployee(
+        firstName,
+        lastName,
+        departmentName
+      );
+      console.log("Employee added, updated departments:", updatedDepartments);
+      setDepartments(updatedDepartments);
+    } catch (error) {
+      console.error("Failed to add employee:", error);
+      alert("Failed to add employee. Check console for details.");
+    }
   };
+
+  if (loading) {
+    return <div style={{ padding: "20px", textAlign: "center" }}>Loading employees...</div>;
+  }
+
+  if (error) {
+    return (
+      <div style={{ padding: "20px", textAlign: "center", color: "red" }}>
+        <p>{error}</p>
+        <p>Make sure backend is running: cd backend && npm run dev</p>
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-
           <Route
             index
             element={
@@ -42,7 +78,6 @@ const App = () => {
               />
             }
           />
-
           <Route
             path="employees"
             element={
@@ -52,9 +87,7 @@ const App = () => {
               />
             }
           />
-
           <Route path="organization" element={<Organization />} />
-
         </Route>
       </Routes>
     </BrowserRouter>
