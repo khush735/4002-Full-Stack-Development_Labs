@@ -1,16 +1,16 @@
 import { employeeRepo } from "../repositories/employeeRepo";
+import type { Department } from "../types/Employee";
 
 export const employeeService = {
-  createEmployee: (
+  async createEmployee(
     firstName: string,
     lastName: string,
     departmentName: string
-  ) => {
-
-    const departments = employeeRepo.getDepartments();
+  ): Promise<{ success: true; data: Department[] } | { success: false; message: string }> {
+    const departments = await employeeRepo.getDepartments();
 
     const departmentExists = departments.some(
-      dept => dept.name === departmentName
+      (dept: Department) => dept.name === departmentName
     );
 
     if (!departmentExists) {
@@ -21,8 +21,7 @@ export const employeeService = {
       return { success: false, message: "First name must be at least 3 characters." };
     }
 
-    const updatedDepartments =
-      employeeRepo.createEmployee(firstName, lastName, departmentName);
+    const updatedDepartments = await employeeRepo.createEmployee(firstName, lastName, departmentName);
 
     return { success: true, data: updatedDepartments };
   }
