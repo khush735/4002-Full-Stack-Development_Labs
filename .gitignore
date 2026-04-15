@@ -1,0 +1,22 @@
+# Node
+node_modules/
+dist/
+
+# Env files
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+
+# OS
+.DS_Store
+
+# Vercel
+.vercel
+
+# Prisma
+.prisma
+
+# Build
+build/
