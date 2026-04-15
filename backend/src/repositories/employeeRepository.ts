@@ -1,20 +1,31 @@
-import { departments } from "../data/department";
+import prisma from '../../prisma/prisma';
 
 export const employeeRepository = {
-
-  getDepartments() {
-    return departments;
+  async getDepartments() {
+    return await prisma.department.findMany({
+      include: {
+        employees: true
+      }
+    });
   },
 
-  addEmployee(firstName: string, lastName: string, departmentName: string) {
+  async addEmployee(firstName: string, lastName: string, departmentName: string) {
+    const dept = await prisma.department.findUnique({
+      where: { name: departmentName }
+    });
 
-    const dept = departments.find(d => d.name === departmentName);
+    if (!dept) throw new Error("Department not found");
 
-    if (!dept) return null;
+    await prisma.employee.create({
+      data: {
+        firstName,
+        lastName,
+        departmentId: dept.id
+      }
+    });
 
-    dept.employees.push({ firstName, lastName });
-
-    return departments;
+    return await prisma.department.findMany({
+      include: { employees: true }
+    });
   }
-
 };
