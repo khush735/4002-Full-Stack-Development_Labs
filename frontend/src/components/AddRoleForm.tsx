@@ -1,4 +1,3 @@
-import { SignedIn, SignedOut, SignInButton, useAuth } from "@clerk/clerk-react";
 import { useFormInput } from "../hooks/useFormInput";
 import { roleRepo } from "../repositories/roleRepo";
 import type { Role } from "../types/Roles";
@@ -8,8 +7,6 @@ interface Props {
 }
 
 const AddRoleForm = ({ setRoles }: Props) => {
-
-  const { getToken } = useAuth();
 
   const firstName = useFormInput("");
   const lastName = useFormInput("");
@@ -23,19 +20,11 @@ const AddRoleForm = ({ setRoles }: Props) => {
       return;
     }
 
-    const token = await getToken();
-
-    if (!token) {
-      alert("Please login again");
-      return;
-    }
-
     try {
       const updatedRoles = await roleRepo.createRole(
         firstName.value,
         lastName.value,
-        role.value,
-        token
+        role.value
       );
 
       setRoles(updatedRoles);
@@ -53,43 +42,34 @@ const AddRoleForm = ({ setRoles }: Props) => {
     <section>
       <h2>Add Organization Member</h2>
 
-      {/* Not logged in */}
-      <SignedOut>
-        <p>Please login to add organization members</p>
-        <SignInButton />
-      </SignedOut>
+      {firstName.error && (
+        <p style={{ color: "red" }}>{firstName.error}</p>
+      )}
 
-      {/* Logged in */}
-      <SignedIn>
-        {firstName.error && (
-          <p style={{ color: "red" }}>{firstName.error}</p>
-        )}
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="First Name"
+          value={firstName.value}
+          onChange={firstName.onChange}
+        />
 
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="First Name"
-            value={firstName.value}
-            onChange={firstName.onChange}
-          />
+        <input
+          type="text"
+          placeholder="Last Name"
+          value={lastName.value}
+          onChange={lastName.onChange}
+        />
 
-          <input
-            type="text"
-            placeholder="Last Name"
-            value={lastName.value}
-            onChange={lastName.onChange}
-          />
+        <input
+          type="text"
+          placeholder="Role"
+          value={role.value}
+          onChange={role.onChange}
+        />
 
-          <input
-            type="text"
-            placeholder="Role"
-            value={role.value}
-            onChange={role.onChange}
-          />
-
-          <button type="submit">Add</button>
-        </form>
-      </SignedIn>
+        <button type="submit">Add</button>
+      </form>
     </section>
   );
 };
