@@ -7,17 +7,19 @@ interface Props {
   onAddEmployee: (
     firstName: string,
     lastName: string,
-    departmentName: string
-  ) => void;
+    departmentName: string,
+    token: string
+  ) => Promise<void>;
 }
 
 const EmployeesPage = ({ departments, onAddEmployee }: Props) => {
-  const handleAddEmployee = (
+  const handleAddEmployee = async (
     firstName: string,
     lastName: string,
-    departmentName: string
+    departmentName: string,
+    token: string
   ) => {
-    onAddEmployee(firstName, lastName, departmentName);
+    await onAddEmployee(firstName, lastName, departmentName, token);
   };
 
   return (

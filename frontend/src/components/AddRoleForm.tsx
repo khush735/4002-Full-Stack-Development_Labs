@@ -42,25 +42,30 @@ const AddRoleForm = ({ setRoles }: Props) => {
     <section>
       <h2>Add Organization Member</h2>
 
-      {firstName.error && <p style={{ color: "red" }}>{firstName.error}</p>}
+      {firstName.error && (
+        <p style={{ color: "red" }}>{firstName.error}</p>
+      )}
 
       <form onSubmit={handleSubmit}>
         <input
+          type="text"
+          placeholder="First Name"
           value={firstName.value}
           onChange={firstName.onChange}
-          placeholder="First Name"
         />
 
         <input
+          type="text"
+          placeholder="Last Name"
           value={lastName.value}
           onChange={lastName.onChange}
-          placeholder="Last Name"
         />
 
         <input
+          type="text"
+          placeholder="Role"
           value={role.value}
           onChange={role.onChange}
-          placeholder="Role"
         />
 
         <button type="submit">Add</button>
