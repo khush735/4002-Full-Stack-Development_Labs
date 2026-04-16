@@ -5,7 +5,9 @@ import Layout from "./components/Layout";
 import EmployeesPage from "./components/EmployeesPage";
 import Organization from "./components/Organization";
 
+import { useAuth } from "@clerk/clerk-react";
 import { employeeRepo } from "./repositories/employeeRepo";
+import { employeeService } from "./services/employeeService";
 import type { Department as DepartmentType } from "./types/Employee";
 
 const App = () => {
@@ -33,22 +35,23 @@ const App = () => {
     }
   };
 
+  const { getToken } = useAuth();
+
   const addEmployee = async (
     firstName: string,
     lastName: string,
-    departmentName: string,
-    token: string
+    departmentName: string
   ) => {
     try {
+      const token = await getToken();
       console.log("Adding employee:", { firstName, lastName, departmentName });
-      const updatedDepartments = await employeeRepo.createEmployee(
-        firstName,
-        lastName,
-        departmentName,
-        token
-      );
-      console.log("Employee added, updated departments:", updatedDepartments);
-      setDepartments(updatedDepartments);
+      const result = await employeeService.createEmployee(firstName, lastName, departmentName, token!);
+      if (result.success) {
+        setDepartments(result.data);
+        console.log("Employee added, updated departments:", result.data);
+      } else {
+        throw new Error(result.message);
+      }
     } catch (error) {
       console.error("Failed to add employee:", error);
       alert("Failed to add employee. Check console for details.");

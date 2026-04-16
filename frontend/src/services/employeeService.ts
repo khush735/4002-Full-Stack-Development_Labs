@@ -5,7 +5,8 @@ export const employeeService = {
   async createEmployee(
     firstName: string,
     lastName: string,
-    departmentName: string
+    departmentName: string,
+    token: string
   ): Promise<{ success: true; data: Department[] } | { success: false; message: string }> {
     const departments = await employeeRepo.getDepartments();
 
@@ -21,7 +22,7 @@ export const employeeService = {
       return { success: false, message: "First name must be at least 3 characters." };
     }
 
-    const updatedDepartments = await employeeRepo.createEmployee(firstName, lastName, departmentName);
+    const updatedDepartments = await employeeRepo.createEmployee(firstName, lastName, departmentName, token);
 
     return { success: true, data: updatedDepartments };
   }
