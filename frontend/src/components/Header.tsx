@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 
 const Header = () => {
   return (
-<header className="site-header">
+    <header className="site-header">
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
         <img src="/pixell-logo.png" alt="Pixell Logo" style={{ height: '50px', marginRight: '10px' }} />
         <h1>Pixell River Employee Directory</h1>
       </div>
+
       <p>Welcome! Meet the people behind Pixell River Financial.</p>
 
       <nav style={{ marginTop: "10px" }}>
@@ -18,6 +20,17 @@ const Header = () => {
           Organization
         </Link>
       </nav>
+
+      {/* AUTH UI */}
+      <div style={{ marginTop: "10px" }}>
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </div>
     </header>
   );
 };

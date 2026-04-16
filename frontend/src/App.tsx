@@ -19,6 +19,7 @@ const App = () => {
 
   const loadDepartments = async () => {
     try {
+      if (departments.length > 0) return; // Skip if already loaded (handles StrictMode double-call)
       console.log("Loading departments...");
       const data = await employeeRepo.getDepartments();
       console.log("Departments loaded:", data);
@@ -35,14 +36,16 @@ const App = () => {
   const addEmployee = async (
     firstName: string,
     lastName: string,
-    departmentName: string
+    departmentName: string,
+    token: string
   ) => {
     try {
       console.log("Adding employee:", { firstName, lastName, departmentName });
       const updatedDepartments = await employeeRepo.createEmployee(
         firstName,
         lastName,
-        departmentName
+        departmentName,
+        token
       );
       console.log("Employee added, updated departments:", updatedDepartments);
       setDepartments(updatedDepartments);
