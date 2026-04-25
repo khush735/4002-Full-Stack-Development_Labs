@@ -7,25 +7,32 @@ interface Props {
   onAddEmployee: (
     firstName: string,
     lastName: string,
-    departmentName: string,
-    token: string
+    departmentName: string
   ) => Promise<void>;
 }
 
 const EmployeesPage = ({ departments, onAddEmployee }: Props) => {
+
   const handleAddEmployee = async (
     firstName: string,
     lastName: string,
     departmentName: string,
-    token: string
+    _token: string
   ) => {
-    await onAddEmployee(firstName, lastName, departmentName, token);
+    await onAddEmployee(
+      firstName,
+      lastName,
+      departmentName
+    );
   };
 
   return (
     <>
       {departments.map((dept, index) => (
-        <Department key={index} department={dept} />
+        <Department
+          key={index}
+          department={dept}
+        />
       ))}
 
       <AddEmployeeForm
