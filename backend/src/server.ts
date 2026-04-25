@@ -3,6 +3,7 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
+import { clerkMiddleware } from "@clerk/express";
 
 import employeeRoutes from "./routes/employeeRoutes";
 import roleRoutes from "./routes/roleRoutes";
@@ -12,6 +13,9 @@ const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
+
+// Clerk authentication middleware
+app.use(clerkMiddleware());
 
 app.use("/api", employeeRoutes);
 app.use("/api", roleRoutes);
