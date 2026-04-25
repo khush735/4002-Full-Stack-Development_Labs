@@ -1,9 +1,17 @@
 import { Router } from "express";
+import { requireAuth } from "@clerk/express";
 import { roleController } from "../controllers/roleController";
 
 const router = Router();
 
+// Public
 router.get("/roles", roleController.getRoles);
-router.post("/roles", roleController.createRole);
+
+// PROTECTED
+router.post(
+  "/roles",
+  requireAuth(),
+  roleController.createRole
+);
 
 export default router;

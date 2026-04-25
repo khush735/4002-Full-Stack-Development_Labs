@@ -1,12 +1,17 @@
 import { Router } from "express";
+import { requireAuth } from "@clerk/express";
 import { employeeController } from "../controllers/employeeController";
 
 const router = Router();
 
-// Public route
+// Public
 router.get("/departments", employeeController.getDepartments);
 
-// Protected route - requires authentication
-router.post("/employees", employeeController.addEmployee);
+// PROTECTED
+router.post(
+  "/employees",
+  requireAuth(),
+  employeeController.addEmployee
+);
 
 export default router;
